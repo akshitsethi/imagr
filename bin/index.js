@@ -43,7 +43,43 @@ yargs(hideBin(process.argv))
           return console.log(boxen(message, boxenOptions));
         }
 
-        
+        const outputExtensions = [
+          'jpg',
+          'png',
+          'bmp',
+          'tiff',
+          'gif'
+        ];
+
+        if (!outputExtensions.includes(argv.format)) {
+          message = chalk.red(`Error: Output format you specified is not supported. Possible values are: ${outputExtensions.join(',')}`);
+          return console.log(boxen(message, boxenOptions));
+        }
+
+        // Check if the name of the file is provided
+        let newFileName = `imagr-${Math.random().toString(36).slice(2)}.${argv.format}`;
+        if (argv.name) {
+          newFileName = `${argv.name}.${argv.format}`;
+        }
+
+        // Check for quality if provided
+        let quality = 100;
+        if (argv.quality) {
+          quality = argv.quality;
+        }
+
+        if (isNaN(quality) || quality < 40 || quality > 100) {
+          message = chalk.red(`Error: Output quality should be numeric and between 40-100.`);
+          return console.log(boxen(message, boxenOptions));
+        }
+
+        // Write new image to disk
+        image
+          .quality(quality)
+          .write(newFileName);
+
+          message = chalk.green(`Success: Image named "${newFileName}" has been saved to the disk.`);
+          return console.log(boxen(message, boxenOptions));
       })
       .catch((err) => {
         const errorMessage = err.message || 'An error occurred processing this file. Please select a different one and try again!';
@@ -52,6 +88,7 @@ yargs(hideBin(process.argv))
       });
   })
   .option('f', { alias: 'format', describe: 'Format of the output image', type: 'string', demandOption: true })
-  .option('s', { alias: 'size', describe: 'Desired size of the output image', type: 'string' })
+  .option('n', { alias: 'name', describe: 'Name of the output image (without extension)', type: 'string' })
+  .option('q', { alias: 'quality', describe: 'Specify quality of the output image (between 40-100)', number: true })
   .demandCommand(1)
   .parse();
