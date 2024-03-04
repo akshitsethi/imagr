@@ -1,0 +1,24 @@
+{
+  "name": "imagr",
+  "version": "1.0.0",
+  "description": "Command line utility for converting images.",
+  "main": "bin/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "image converter",
+    "jpg to png",
+    "heic to jpg"
+  ],
+  "author": "Akshit Sethi <akshitsethi@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "commander": "^12.0.0",
+    "jimp": "^0.22.12"
+  },
+  "type": "module",
+  "bin": {
+    "imagr": "./bin/index.js"
+  }
+}
